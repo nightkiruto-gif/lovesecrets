@@ -23,7 +23,10 @@ let db = null;
 
 try {
   const app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
+
+db = initializeFirestore(app, {
+  experimentalForceLongPolling: true
+});
 } catch (error) {
   console.error('Firebase initialization error:', error);
 }
