@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /quizzes/{code} {
+      // Starter rules for public, no-account sharing. Not production-grade.
+      // Anyone with a code can read its quiz; quiz answers must not be truly sensitive.
+      allow get: if code.matches('^[0-9]{6}$');
+      allow list: if false;
+      allow create: if code.matches('^[0-9]{6}$')
+        && request.resource.data.keys().hasOnly(['creator', 'questions', 'createdAt'])
+        && request.resource.data.creator is string
+        && request.resource.data.creator.size() <= 32
+        && request.resource.data.questions is list
+        && request.resource.data.questions.size() >= 5
+        && request.resource.data.questions.size() <= 20;
+      allow update, delete: if false;
+    }
+  }
+}
